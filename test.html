@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+</head>
+<body>
+<div id="viewContainer" style="width: 100%; height: 60vh"></div>
+<textarea id="results" style="width: 100%; min-height: 10vh; font-size: 3vmin; overflow: auto" disabled></textarea>
+<button id="btn-closeScanner">close scanner</button>
+<button id="btn-scanBarcode">scan barcode</button>
+<script src="dist/easy-barcode-scanner.js?v=01291604"></script>
+<script>
+  //Dynamsoft.Core.CoreModule.engineResourcePaths.dbr = 'node_modules/@dynamsoft/dynamsoft-barcode-reader/dist';
+  Dynamsoft.License.LicenseManager.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9");
+  let scanner;
+  (async()=>{
+
+    scanner = await Dynamsoft.EasyBarcodeScanner.createInstance();
+    document.querySelector("#viewContainer").append(scanner.view.getUIElement());
+
+    const resultsContainer = document.querySelector("#results");
+    scanner.router.addResultReceiver({ onDecodedBarcodeReceived: (result) => {
+      if (result.barcodesResultItems.length > 0) {
+        resultsContainer.textContent = '';
+        for (let item of result.barcodesResultItems) {
+          resultsContainer.textContent += `${item.formatString}: ${item.text}\n\n`;
+        }
+      }
+    }});
+
+    await scanner.cameraEnhancer.open();
+    await scanner.router.startCapturing("ReadBarcodes_SpeedFirst");
+  })();
+
+  document.getElementById('btn-closeScanner').addEventListener('click',async()=>{
+    scanner.cameraEnhancer.close();
+    scanner.router.stopCapturing();
+  });
+
+  document.getElementById('btn-scanBarcode').addEventListener('click',async()=>{
+    let txt = await Dynamsoft.scanBarcode();
+    alert(txt);
+  });
+</script>
+
+</body>
+</html>
