@@ -1,6 +1,6 @@
 import { CoreModule, EnumCapturedResultItemType } from 'dynamsoft-core'; 
 import { CaptureVisionRouter, CapturedResultReceiver } from 'dynamsoft-capture-vision-router';
-import { CameraEnhancer, CameraView } from 'dynamsoft-camera-enhancer';
+import { CameraEnhancer, CameraView, DrawingItemEvent } from 'dynamsoft-camera-enhancer';
 import { MultiFrameResultCrossFilter } from 'dynamsoft-utility';
 import { BarcodeResultItem } from 'dynamsoft-barcode-reader';
 export * as Core from 'dynamsoft-core';
@@ -117,14 +117,32 @@ async function scanBarcode(elementOrUrl: string | HTMLElement = './dce.ui.html')
     cameraEnhancer.pause();
     router.stopCapturing();
     
-    // TODO: if multiple barcode, pls select one
+    const result = await new Promise<string>((rs, rj) => {
+      const dbrLayer = view.getDrawingLayer(2);
+      const items = dbrLayer.getDrawingItems();
+      if (!items.length) rj(new Error("No drawing items."));
+      
+      if (items.length === 1) {
+        const resultText = items[0].getNote("text").content;
+        rs(resultText);
+      }
+
+      items.forEach((item) => {
+        item.on("mouseup", (event: DrawingItemEvent) => {
+          const item = event.targetItem;
+          const resultText = item.getNote("text").content;
+          rs(resultText);
+        });
+      });
+    });
 
     funcDispose();
 
-    for(let item of mapResults){
-      rs(item[1].text);
-      return;
-    }
+    // for(let item of mapResults){
+    //   rs(item[1].text);
+    //   return;
+    // }
+    rs(result);
   });
 }
 
