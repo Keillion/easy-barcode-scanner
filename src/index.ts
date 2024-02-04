@@ -79,16 +79,16 @@ async function scanBarcode(elementOrUrl: string | HTMLElement = './dce.ui.html')
     let resolveVideoScan: ()=>void;
     let pVideoScan = new Promise<void>(rs=>{resolveVideoScan = rs});
     let iRound = 0;
-    let mapResults: Map<string, BarcodeResultItem> = new Map();
+    // let mapResults: Map<string, BarcodeResultItem> = new Map();
 
     let capturedresultreceiver = new CapturedResultReceiver();
     capturedresultreceiver.onDecodedBarcodesReceived = r=>{
       try{
         if(r.barcodeResultItems.length){
           ++iRound;
-          for(let item of r.barcodeResultItems){
-            mapResults.set(item.formatString+'-'+item.text, item);
-          }
+          // for(let item of r.barcodeResultItems){
+          //   mapResults.set(item.formatString+'-'+item.text, item);
+          // }
           if(2 == iRound){
             resolveVideoScan();
           }
