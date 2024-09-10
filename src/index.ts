@@ -1,4 +1,4 @@
-import { CoreModule, EnumCapturedResultItemType, Rect, DSRect } from 'dynamsoft-core'; 
+import { CoreModule, EnumCapturedResultItemType, Rect, DSRect, Point } from 'dynamsoft-core'; 
 import { LicenseManager } from 'dynamsoft-license';
 import { CaptureVisionRouter, CapturedResultReceiver } from 'dynamsoft-capture-vision-router';
 import { CameraEnhancer, CameraView, DrawingItemEvent, Feedback, DrawingStyleManager, DrawingStyle } from 'dynamsoft-camera-enhancer';
@@ -57,6 +57,8 @@ class EasyBarcodeScanner{
   set scanRegionMaskVisible(value: boolean){ this._view.setScanRegionMaskVisible(value); }
   get decodedBarcodeVisible(){ return this._view._drawingLayerManager.getDrawingLayer(2).isVisible(); }
   set decodedBarcodeVisible(value: boolean){ this._view._drawingLayerManager.getDrawingLayer(2).setVisible(value); }
+  get minImageCaptureInterval(){ return (this._cvRouter as any)._minImageCaptureInterval; }
+  set minImageCaptureInterval(value: number){ (this._cvRouter as any)._minImageCaptureInterval = value; }
 
   onFrameRead:(results:BarcodeResultItem[])=>void|any;
   onUniqueRead:(txt:string, result:BarcodeResultItem)=>void|any;
@@ -65,39 +67,45 @@ class EasyBarcodeScanner{
   static createInstance(): Promise<EasyBarcodeScanner>;
   static createInstance(uiPath: string): Promise<EasyBarcodeScanner>;
   static createInstance(uiElement: HTMLElement): Promise<EasyBarcodeScanner>;
+  static createInstance(ui?: string | HTMLElement): Promise<EasyBarcodeScanner>;
   static async createInstance(ui?: string | HTMLElement){
     let scanner = new EasyBarcodeScanner();
-    let cvRouter = scanner._cvRouter = await CaptureVisionRouter.createInstance();
+    try{
+      let cvRouter = scanner._cvRouter = await CaptureVisionRouter.createInstance();
 
-    // let settings = await cvRouter.getSimplifiedSettings('ReadBarcodes_SpeedFirst');
-    // settings.capturedResultItemTypes = EnumCapturedResultItemType.CRIT_BARCODE;
-    // await cvRouter.updateSettings('ReadBarcodes_SpeedFirst', settings);
+      // let settings = await cvRouter.getSimplifiedSettings('ReadBarcodes_SpeedFirst');
+      // settings.capturedResultItemTypes = EnumCapturedResultItemType.CRIT_BARCODE;
+      // await cvRouter.updateSettings('ReadBarcodes_SpeedFirst', settings);
 
-    let view = scanner._view = await CameraView.createInstance(ui);
-    let cameraEnhancer = scanner._cameraEnhancer = await CameraEnhancer.createInstance(view);
-    cvRouter.setInput(cameraEnhancer);
+      let view = scanner._view = await CameraView.createInstance(ui);
+      let cameraEnhancer = scanner._cameraEnhancer = await CameraEnhancer.createInstance(view);
+      cvRouter.setInput(cameraEnhancer);
 
-    let filter = scanner._filter = new MultiFrameResultCrossFilter();
-    filter.enableResultCrossVerification(EnumCapturedResultItemType.CRIT_BARCODE, true);
-    //filter.enableResultDeduplication(EnumCapturedResultItemType.CRIT_BARCODE, true);
-    cvRouter.addResultFilter(filter);
+      let filter = scanner._filter = new MultiFrameResultCrossFilter();
+      filter.enableResultCrossVerification(EnumCapturedResultItemType.CRIT_BARCODE, true);
+      //filter.enableResultDeduplication(EnumCapturedResultItemType.CRIT_BARCODE, true);
+      cvRouter.addResultFilter(filter);
 
-    cvRouter.addResultReceiver({
-      onDecodedBarcodesReceived: (results)=>{
-        let items = results.barcodeResultItems;
+      cvRouter.addResultReceiver({
+        onDecodedBarcodesReceived: (results)=>{
+          let items = results.barcodeResultItems;
 
-        try{scanner.onFrameRead && scanner.onFrameRead(items)}catch(_){}
+          try{scanner.onFrameRead && scanner.onFrameRead(items)}catch(_){}
 
-        let hasUnique = false;
-        for(let item of items){
-          if(!(item as any).duplicate){
-            hasUnique = true;
-            try{scanner.onUniqueRead && scanner.onUniqueRead(item.text, item)}catch(_){}
+          let hasUnique = false;
+          for(let item of items){
+            if(!(item as any).duplicate){
+              hasUnique = true;
+              try{scanner.onUniqueRead && scanner.onUniqueRead(item.text, item)}catch(_){}
+            }
           }
+          if(hasUnique&& scanner.isBeepOnUniqueRead){ Feedback.beep(); }
         }
-        if(hasUnique&& scanner.isBeepOnUniqueRead){ Feedback.beep(); }
-      }
-    });
+      });
+    }catch(ex){
+      scanner.dispose();
+      throw ex;
+    }
 
     return scanner;
   }
@@ -122,20 +130,25 @@ class EasyBarcodeScanner{
   }
 
   async open(){
-    let ui = this._view.getUIElement();
-    if(!ui.parentElement){
-      Object.assign(ui.style, {
-        position: 'fixed',
-        left: '0',
-        top: '0',
-        width: '100vw',
-        height: '100vh',
-      });
-      document.body.append(ui);
-      this._bAddToBodyWhenOpen = true;
+    if(!this._cameraEnhancer.isOpen()){
+      let ui = this._view.getUIElement();
+      if(!ui.parentElement){
+        Object.assign(ui.style, {
+          position: 'fixed',
+          left: '0',
+          top: '0',
+          width: '100vw',
+          height: '100vh',
+        });
+        document.body.append(ui);
+        this._bAddToBodyWhenOpen = true;
+      }
+      await this._cameraEnhancer.open();
+      await this._cvRouter.startCapturing(this.templateName);
+    }else if(this._cameraEnhancer.isPaused()){
+      await this._cameraEnhancer.resume();
+      await this._cvRouter.startCapturing(this.templateName);
     }
-    await this._cameraEnhancer.open();
-    await this._cvRouter.startCapturing(this.templateName);
   }
   close(){
     let ui = this._view.getUIElement();
@@ -146,37 +159,38 @@ class EasyBarcodeScanner{
     this._cvRouter.stopCapturing();
     this._cameraEnhancer.close();
   }
-}
+  pause(){
+    this._cvRouter.stopCapturing();
+    this._cameraEnhancer.pause();
+  }
 
-async function scanBarcode(elementOrUrl: string | HTMLElement = './dce.ui.html'){// TODO: use cdn url
+  turnOnTorch(){ this._cameraEnhancer.turnOnTorch(); }
+  turnOffTorch(){ this._cameraEnhancer.turnOffTorch(); }
+  //turnAutoTorch(){ this._cameraEnhancer.turnAutoTorch(); }
+
+  convertToPageCoordinates(point: Point){ this._cameraEnhancer.convertToPageCoordinates(point); }
+  convertToClientCoordinates(point: Point){ this._cameraEnhancer.convertToClientCoordinates(point); }
+
+  dispose(){
+    this._cvRouter?.dispose();
+    let ui = this._view.getUIElement();
+    this._cameraEnhancer?.dispose();
+    if(this._bAddToBodyWhenOpen){
+      this._bAddToBodyWhenOpen = false;
+      document.body.removeChild(ui);
+    }
+  }
+}
+function scanBarcode(): Promise<string>;
+function scanBarcode(uiPath: string): Promise<string>;
+function scanBarcode(uiElement: HTMLElement): Promise<string>;
+function scanBarcode(ui?: string | HTMLElement): Promise<string>;
+async function scanBarcode(ui: string | HTMLElement = './dce.ui.html'){// TODO: use cdn url
   return await new Promise(async(rs,rj)=>{
 
     //========================== init ============================
 
-    let router = await CaptureVisionRouter.createInstance();
-    let settings = await router.getSimplifiedSettings('ReadBarcodes_SpeedFirst');
-    settings.capturedResultItemTypes = EnumCapturedResultItemType.CRIT_BARCODE;
-    await router.updateSettings('ReadBarcodes_SpeedFirst', settings);
-    let view = await CameraView.createInstance(elementOrUrl); 
-    let cameraEnhancer = await CameraEnhancer.createInstance(view);
-    router.setInput(cameraEnhancer);
-    let filter = new MultiFrameResultCrossFilter();
-    filter.enableResultCrossVerification(EnumCapturedResultItemType.CRIT_BARCODE, true);
-    router.addResultFilter(filter);
-    let ui = view.getUIElement();
-
-    let funcDispose = ()=>{
-      (self as any).mydce = cameraEnhancer;
-      (self as any).myview = view;
-      console.log('funcDispose')
-      try{cameraEnhancer.close();}catch(_){}
-      try{router.stopCapturing();}catch(_){}
-      
-      try{router.dispose();}catch(_){}
-      try{cameraEnhancer.dispose();}catch(_){}
-      try{document.body.removeChild(ui);}catch(_){}
-      try{view.dispose();}catch(_){}
-    };
+    let scanner = await EasyBarcodeScanner.createInstance(ui);
 
     //========================== receive result ============================
 
@@ -185,45 +199,32 @@ async function scanBarcode(elementOrUrl: string | HTMLElement = './dce.ui.html')
     let iRound = 0;
     // let mapResults: Map<string, BarcodeResultItem> = new Map();
 
-    let capturedresultreceiver = new CapturedResultReceiver();
-    capturedresultreceiver.onDecodedBarcodesReceived = r=>{
-      try{
-        if(r.barcodeResultItems.length){
-          ++iRound;
-          // for(let item of r.barcodeResultItems){
-          //   mapResults.set(item.formatString+'-'+item.text, item);
-          // }
-          if(2 == iRound){
-            resolveVideoScan();
-          }
+    scanner.onFrameRead = r=>{
+      if(r.length){
+        ++iRound;
+        if(2 == iRound){
+          resolveVideoScan();
         }
-      }catch(ex){
-        funcDispose();
-        rj(ex);
       }
     };
-    router.addResultReceiver(capturedresultreceiver); //, onCapturedResultReceived: r=>{}, onOriginalImageResultReceived: r=>{}
     
     //========================== ui and event ============================
-    let btnClose = ui.shadowRoot.querySelector('.easyscanner-close-btn');
+    let btnClose = scanner.getUIElement().shadowRoot.querySelector('.easyscanner-close-btn');
     btnClose.addEventListener('click',()=>{
-      funcDispose();
+      scanner.dispose();
       rs(null);
     });
-    document.body.append(ui);
 
-    await cameraEnhancer.open();
-    await router.startCapturing("ReadBarcodes_SpeedFirst");
+    await scanner.open();
 
     await pVideoScan;
     console.log('finish pVideoScan')
     //========================== success get result ============================
 
-    cameraEnhancer.pause();
-    router.stopCapturing();
+    scanner.pause();
     
     const result = await new Promise<string>((rs, rj) => {
-      const dbrLayer = view.getDrawingLayer(2);
+      const dbrLayer = scanner._view.getDrawingLayer(2);
       const items = dbrLayer.getDrawingItems();
       if (!items.length) rj(new Error("No drawing items."));
       
@@ -241,7 +242,7 @@ async function scanBarcode(elementOrUrl: string | HTMLElement = './dce.ui.html')
       });
     });
 
-    funcDispose();
+    scanner.dispose();
 
     // for(let item of mapResults){
     //   rs(item[1].text);

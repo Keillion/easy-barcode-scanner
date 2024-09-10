@@ -21,20 +21,19 @@
     // document.querySelector("#viewContainer").append(scanner.getUIElement());
 
     //const resultsContainer = document.querySelector("#results");
-    //scanner.onUniqueRead = (txt) => { console.log(txt); };
+    scanner.onUniqueRead = (txt) => { console.log(txt); };
 
     await scanner.open();
   })();
 
-  // document.getElementById('btn-closeScanner').addEventListener('click',async()=>{
-  //   scanner.cameraEnhancer.close();
-  //   scanner.router.stopCapturing();
-  // });
+  document.getElementById('btn-closeScanner').addEventListener('click',async()=>{
+    scanner.close();
+  });
 
-  // document.getElementById('btn-scanBarcode').addEventListener('click',async()=>{
-  //   let txt = await Dynamsoft.scanBarcode();
-  //   alert(txt);
-  // });
+  document.getElementById('btn-scanBarcode').addEventListener('click',async()=>{
+    let txt = await Dynamsoft.scanBarcode();
+    alert(txt);
+  });
 </script>
 
 </body>
