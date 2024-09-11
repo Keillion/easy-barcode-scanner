@@ -1,15 +1,9 @@
 import { CoreModule, EnumCapturedResultItemType, Rect, DSRect, Point } from 'dynamsoft-core'; 
 import { LicenseManager } from 'dynamsoft-license';
-import { CaptureVisionRouter, CapturedResultReceiver } from 'dynamsoft-capture-vision-router';
+import { CaptureVisionRouter } from 'dynamsoft-capture-vision-router';
 import { CameraEnhancer, CameraView, DrawingItemEvent, Feedback, DrawingStyleManager, DrawingStyle } from 'dynamsoft-camera-enhancer';
 import { BarcodeResultItem } from 'dynamsoft-barcode-reader';
 import { MultiFrameResultCrossFilter } from 'dynamsoft-utility';
-export * as Core from 'dynamsoft-core';
-export * as License from 'dynamsoft-license';
-export * as CVR from 'dynamsoft-capture-vision-router';
-export * as DCE from 'dynamsoft-camera-enhancer';
-export * as DBR from 'dynamsoft-barcode-reader';
-export * as Utility from 'dynamsoft-utility';
 
 
 //The following code uses the jsDelivr CDN, feel free to change it to your own location of these files
@@ -218,7 +212,6 @@ async function scanBarcode(ui: string | HTMLElement = './dce.ui.html'){// TODO: 
     await scanner.open();
 
     await pVideoScan;
-    console.log('finish pVideoScan')
     //========================== success get result ============================
 
     scanner.pause();

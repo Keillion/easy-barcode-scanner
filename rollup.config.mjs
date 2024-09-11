@@ -3,15 +3,18 @@ import typescript from "@rollup/plugin-typescript";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
 
+import pkg from "./package.json" assert { type: "json" };
+const version = pkg.version;
+
+const banner = `/*!
+* easy-barcode-scanner
+* @version ${version} (build ${(new Date()).toISOString()})
+* A wrapper for https://github.com/Dynamsoft/barcode-reader-javascript. Easier to use.
+* The wrapper is under Unlicense, the Dynamsoft SDK it depended is still protected by copyright.
+*/`;
 export default async (commandLineArgs)=>{
   fs.rmSync('dist', {recursive: true, force: true });
     
-  const banner = `/*!
-  * easy-barcode-scanner (build ${(new Date()).toISOString()})
-  * A wrapper for https://github.com/Dynamsoft/barcode-reader-javascript. Easier to use.
-  * The wrapper is under Unlicense, the Dynamsoft SDK it depended is still protected by copyright.
-  */`;
-
   
   return [
     {
@@ -19,15 +22,30 @@ export default async (commandLineArgs)=>{
       plugins: [
         nodeResolve(),
         typescript({ tsconfig: "./tsconfig.json" }),
-        // terser({ ecma: 5, format: terser_format }),
+      ],
+      external: [
+        "dynamsoft-core",
+        "dynamsoft-license",
+        "dynamsoft-capture-vision-router",
+        "dynamsoft-camera-enhancer",
+        "dynamsoft-barcode-reader",
+        "dynamsoft-utility",
       ],
       output: [
         {
           file: "dist/easy-barcode-scanner.js",
           format: "umd",
-          name: "Dynamsoft",
+          name: "Dynamsoft.EasyBarcodeScanner",
           exports: "named",
           banner: banner,
+          globals: {
+            "dynamsoft-core": "Dynamsoft.Core",
+            "dynamsoft-license": "Dynamsoft.License",
+            "dynamsoft-capture-vision-router": "Dynamsoft.CVR",
+            "dynamsoft-camera-enhancer": "Dynamsoft.DCE",
+            "dynamsoft-barcode-reader": "Dynamsoft.DBR",
+            "dynamsoft-utility": "Dynamsoft.Utility",
+          },
           plugins: [terser({ ecma: 5 })],
         },
         {
@@ -35,14 +53,15 @@ export default async (commandLineArgs)=>{
           format: "es",
           exports: "named",
           banner: banner,
-          plugins: [terser({ ecma: 6 })],
-        },
-        {
-          file: "dist/easy-barcode-scanner.esm.js",
-          format: "es",
-          exports: "named",
-          banner: banner,
-          plugins: [terser({ ecma: 6 })],
+          plugins: [
+            terser({ ecma: 6 }),
+            {
+              // https://rollupjs.org/guide/en/#writebundle
+              writeBundle(options, bundle){
+                fs.cpSync('dist/easy-barcode-scanner.mjs','dist/easy-barcode-scanner.esm.js');
+              }
+            },
+          ],
         },
       ],
     },

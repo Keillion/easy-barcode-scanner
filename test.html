@@ -10,14 +10,13 @@
 <textarea id="results" style="width: 100%; min-height: 10vh; font-size: 3vmin; overflow: auto" disabled></textarea>
 <button id="btn-closeScanner">close scanner</button>
 <button id="btn-scanBarcode">scan barcode</button>
+<script src="https://cdn.jsdelivr.net/npm/dynamsoft-barcode-reader-bundle@10.2.1000/dist/dbr.bundle.js"></script>
 <script src="dist/easy-barcode-scanner.js?v=09031927"></script>
 <script>
-  //Dynamsoft.Core.CoreModule.engineResourcePaths.dbr = 'node_modules/@dynamsoft/dynamsoft-barcode-reader/dist';
-  //Dynamsoft.License.LicenseManager.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9");
   let scanner;
   (async()=>{
 
-    scanner = await Dynamsoft.EasyBarcodeScanner.createInstance();
+    scanner = await Dynamsoft.EasyBarcodeScanner.EasyBarcodeScanner.createInstance();
     // document.querySelector("#viewContainer").append(scanner.getUIElement());
 
     //const resultsContainer = document.querySelector("#results");
@@ -31,7 +30,7 @@
   });
 
   document.getElementById('btn-scanBarcode').addEventListener('click',async()=>{
-    let txt = await Dynamsoft.scanBarcode();
+    let txt = await Dynamsoft.EasyBarcodeScanner.scanBarcode();
     alert(txt);
   });
 </script>
