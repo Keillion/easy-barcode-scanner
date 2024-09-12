@@ -1,7 +1,7 @@
-import { CoreModule, EnumCapturedResultItemType, Rect, DSRect, Point } from 'dynamsoft-core'; 
+import { EnumCapturedResultItemType, Rect, DSRect, Point } from 'dynamsoft-core'; 
 import { LicenseManager } from 'dynamsoft-license';
 import { CaptureVisionRouter } from 'dynamsoft-capture-vision-router';
-import { CameraEnhancer, CameraView, DrawingItemEvent, Feedback, DrawingStyleManager, DrawingStyle } from 'dynamsoft-camera-enhancer';
+import { CameraEnhancer, CameraView, Feedback, DrawingStyleManager, DrawingStyle } from 'dynamsoft-camera-enhancer';
 import { BarcodeResultItem } from 'dynamsoft-barcode-reader';
 import { MultiFrameResultCrossFilter } from 'dynamsoft-utility';
 
@@ -177,11 +177,11 @@ class EasyBarcodeScanner{
     }
   }
 
-  static scanBarcode(): Promise<string>;
-  static scanBarcode(uiPath: string): Promise<string>;
-  static scanBarcode(uiElement: HTMLElement): Promise<string>;
-  static scanBarcode(ui?: string | HTMLElement): Promise<string>;
-  static async scanBarcode(ui: string | HTMLElement = './dce.ui.html'){// TODO: use cdn url
+  static scan(): Promise<string>;
+  static scan(uiPath: string): Promise<string>;
+  static scan(uiElement: HTMLElement): Promise<string>;
+  static scan(ui?: string | HTMLElement): Promise<string>;
+  static async scan(ui: string | HTMLElement = 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1000/dce.ui.html'){
     return await new Promise(async(rs,rj)=>{
 
       //========================== init ============================

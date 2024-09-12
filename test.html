@@ -7,9 +7,9 @@
 </head>
 <body>
 <button id="btn-scanner">test EasyBarcodeScanner</button>
-<button id="btn-scanBarcode">test EasyBarcodeScanner.scanBarcode</button>
+<button id="btn-scan">test EasyBarcodeScanner.scan</button>
 <script src="https://cdn.jsdelivr.net/npm/dynamsoft-barcode-reader-bundle@10.2.1000/dist/dbr.bundle.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1000/dist/easy-barcode-scanner.js?v=09120000"></script>
+<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1000/dist/easy-barcode-scanner.js?v=09120001"></script>
 <script>
   let pScanner, scanner;
   document.getElementById('btn-scanner').addEventListener('click',async()=>{
@@ -18,8 +18,8 @@
     await scanner.open();
   });
 
-  document.getElementById('btn-scanBarcode').addEventListener('click',async()=>{
-    let txt = await EasyBarcodeScanner.scanBarcode();
+  document.getElementById('btn-scan').addEventListener('click',async()=>{
+    let txt = await EasyBarcodeScanner.scan();
     alert(txt);
   });
 </script>
