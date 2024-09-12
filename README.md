@@ -29,3 +29,37 @@ A wrapper for dynamsoft-barcode-reader-javascript. Easier to use.
 </script>
 ```
 ![One function directly scanning](./one-func-direct-scan.png)
+
+## Use in framework
+
+```sh
+npm i dynamsoft-barcode-reader-bundle@10.2.1000 -E
+```
+
+Copy `src/index.ts` to your project as `any-path/easy-barcode-reader.ts`.
+
+```ts
+import EasyBarcodeScanner from 'any-path/easy-barcode-reader';
+
+let pScanner = null;
+let scanner = null;
+
+async mount(){
+    scanner = await (pScanner || (pScanner = EasyBarcodeScanner.createInstance()));
+    scanner.onUniqueRead = (txt) => { console.log(txt); };
+    await scanner.open();
+}
+beforeUnmount(){
+    (await pScanner)?.dispose();
+}
+```
+
+or
+```ts
+import EasyBarcodeScanner from 'any-path/easy-barcode-reader';
+
+async scan(){
+    alert(await EasyBarcodeScanner.scan());
+}
+```
+
