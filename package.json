@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "rollup -c",
+    "build:production": "rollup -c --environment BUILD:production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -35,9 +35,10 @@ export default async (commandLineArgs)=>{
         {
           file: "dist/easy-barcode-scanner.js",
           format: "umd",
-          name: "Dynamsoft.EasyBarcodeScanner",
-          exports: "named",
+          name: "EasyBarcodeScanner",
+          exports: "default",
           banner: banner,
+          sourcemap: 'production' !== process.env.BUILD,
           globals: {
             "dynamsoft-core": "Dynamsoft.Core",
             "dynamsoft-license": "Dynamsoft.License",
@@ -51,8 +52,9 @@ export default async (commandLineArgs)=>{
         {
           file: "dist/easy-barcode-scanner.mjs",
           format: "es",
-          exports: "named",
+          exports: "default",
           banner: banner,
+          sourcemap: 'production' !== process.env.BUILD,
           plugins: [
             terser({ ecma: 6 }),
             {

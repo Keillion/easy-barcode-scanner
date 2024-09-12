@@ -6,31 +6,20 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
 </head>
 <body>
-<div id="viewContainer" style="width: 100%; height: 60vh"></div>
-<textarea id="results" style="width: 100%; min-height: 10vh; font-size: 3vmin; overflow: auto" disabled></textarea>
-<button id="btn-closeScanner">close scanner</button>
-<button id="btn-scanBarcode">scan barcode</button>
+<button id="btn-scanner">test EasyBarcodeScanner</button>
+<button id="btn-scanBarcode">test EasyBarcodeScanner.scanBarcode</button>
 <script src="https://cdn.jsdelivr.net/npm/dynamsoft-barcode-reader-bundle@10.2.1000/dist/dbr.bundle.js"></script>
-<script src="dist/easy-barcode-scanner.js?v=09031927"></script>
+<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1000/dist/easy-barcode-scanner.js?v=09120000"></script>
 <script>
-  let scanner;
-  (async()=>{
-
-    scanner = await Dynamsoft.EasyBarcodeScanner.EasyBarcodeScanner.createInstance();
-    // document.querySelector("#viewContainer").append(scanner.getUIElement());
-
-    //const resultsContainer = document.querySelector("#results");
+  let pScanner, scanner;
+  document.getElementById('btn-scanner').addEventListener('click',async()=>{
+    scanner = await (pScanner || (pScanner = EasyBarcodeScanner.createInstance()));
     scanner.onUniqueRead = (txt) => { console.log(txt); };
-
     await scanner.open();
-  })();
-
-  document.getElementById('btn-closeScanner').addEventListener('click',async()=>{
-    scanner.close();
   });
 
   document.getElementById('btn-scanBarcode').addEventListener('click',async()=>{
-    let txt = await Dynamsoft.EasyBarcodeScanner.scanBarcode();
+    let txt = await EasyBarcodeScanner.scanBarcode();
     alert(txt);
   });
 </script>
