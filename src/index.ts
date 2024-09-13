@@ -1,4 +1,4 @@
-import { EnumCapturedResultItemType, Rect, DSRect, Point } from 'dynamsoft-core'; 
+import { CoreModule, EnumCapturedResultItemType, Rect, DSRect, Point } from 'dynamsoft-core'; 
 import { LicenseManager } from 'dynamsoft-license';
 import { CaptureVisionRouter } from 'dynamsoft-capture-vision-router';
 import { CameraEnhancer, CameraView, Feedback, DrawingStyleManager, DrawingStyle } from 'dynamsoft-camera-enhancer';
@@ -6,16 +6,16 @@ import { BarcodeResultItem } from 'dynamsoft-barcode-reader';
 import { MultiFrameResultCrossFilter } from 'dynamsoft-utility';
 
 
-// //The following code uses the jsDelivr CDN, feel free to change it to your own location of these files
-// Object.assign(CoreModule.engineResourcePaths, {
-//   std: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.2.10/dist/",
-//   dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.2.30/dist/",
-//   core: "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.2.30/dist/",
-//   license: "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.2.21/dist/",
-//   cvr: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.2.30/dist/",
-//   dbr: "https://cdn.jsdelivr.net/npm/dynamsoft-barcode-reader@10.2.10/dist/",
-//   dce: "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.3/dist/"
-// });
+//The following code uses the jsDelivr CDN, feel free to change it to your own location of these files
+Object.assign(CoreModule.engineResourcePaths, {
+  std: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.2.10/dist/",
+  dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.2.30/dist/",
+  core: "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.2.30/dist/",
+  license: "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.2.21/dist/",
+  cvr: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.2.30/dist/",
+  dbr: "https://cdn.jsdelivr.net/npm/dynamsoft-barcode-reader@10.2.10/dist/",
+  dce: "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.3/dist/"
+});
 
 if(typeof document != undefined){
   let cs = document?.currentScript;
