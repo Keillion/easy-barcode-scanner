@@ -183,7 +183,7 @@ class EasyBarcodeScanner{
   static scan(uiPath: string): Promise<string>;
   static scan(uiElement: HTMLElement): Promise<string>;
   static scan(ui?: string | HTMLElement): Promise<string>;
-  static async scan(ui: string | HTMLElement = 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1003/dce.ui.html'){
+  static async scan(ui: string | HTMLElement = 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1004/dce.ui.html'){
     return await new Promise(async(rs,rj)=>{
 
       //========================== init ============================
@@ -229,9 +229,10 @@ class EasyBarcodeScanner{
         }
       });
 
-      let isTorchOn = false;
+      let isTorchOn = false; // torch has another style, you can check html part
       shadowRoot.querySelector('.easyscanner-flash-btn').addEventListener('pointerdown', ()=>{
-        isTorchOn ? scanner.turnOffTorch() : scanner.turnOnTorch();
+        isTorchOn = !isTorchOn;
+        isTorchOn ? scanner.turnOnTorch() : scanner.turnOffTorch();
       });
 
       // easyscanner-more-settings-btn not used

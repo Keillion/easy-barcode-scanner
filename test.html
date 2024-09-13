@@ -19,7 +19,7 @@
   });
 
   document.getElementById('btn2').addEventListener('click',async()=>{
-    let txt = await EasyBarcodeScanner.scan();
+    let txt = await EasyBarcodeScanner.scan('./dce.ui.html');
     alert(txt);
   });
 </script>
