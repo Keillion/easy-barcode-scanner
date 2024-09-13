@@ -83,4 +83,4 @@ The ui can be a url or a `HTMLElement`.
 
 Please refer to [customize the ui for CameraEnhancer](https://www.dynamsoft.com/camera-enhancer/docs/web/programming/javascript/user-guide/index.html#customize-the-ui) for details.
 
-You can also clone this repository and modify `src/index.ts` to suit your needs.
+You may also clone this repository and modify `src/index.ts` to suit your needs.
