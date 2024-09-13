@@ -87,12 +87,12 @@ Please refer to [customize the ui for CameraEnhancer](https://www.dynamsoft.com/
 
 You may also clone this repository and modify `src/index.ts` to suit your needs.
 
-## All supported barcode types
+## All supported barcodes
 
 You can try scanning this picture as a test.
 
-Some barcodecodes are not enabled by default. Pls check [here](https://www.dynamsoft.com/barcode-reader/docs/web/programming/javascript/user-guide/index.html#customize-the-process) to change settings.
+Some barcodes are not enabled by default config for performance reason. Pls check [here](https://www.dynamsoft.com/barcode-reader/docs/web/programming/javascript/user-guide/index.html#customize-the-process) to change settings.
 
-![all supported barcode types](./AllSupportedBarcodeTypes.png)
+![default supported barcode](./default-supported-barcode.png)
 
 
