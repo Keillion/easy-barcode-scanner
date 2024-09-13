@@ -91,6 +91,8 @@ You may also clone this repository and modify `src/index.ts` to suit your needs.
 
 You can try scanning this picture as a test.
 
+Some barcodecodes are not enabled by default. Pls check [here](https://www.dynamsoft.com/barcode-reader/docs/web/programming/javascript/user-guide/index.html#customize-the-process) to change settings.
+
 ![all supported barcode types](./AllSupportedBarcodeTypes.png)
 
 
