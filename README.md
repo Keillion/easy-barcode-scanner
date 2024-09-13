@@ -89,6 +89,6 @@ You may also clone this repository and modify `src/index.ts` to suit your needs.
 
 You can try scanning this picture as a test.
 
-[all supported barcode types](./AllSupportedBarcodeTypes.png)
+![all supported barcode types](./AllSupportedBarcodeTypes.png)
 
 
