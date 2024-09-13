@@ -70,3 +70,17 @@ async scan(){
 }
 ```
 
+## Customize the ui and the feature
+
+```typescript
+// use 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.3/dist/dce.ui.html' by default
+EasyBarcodeScanner.createInstance(ui?: string|HTMLElement);
+// use 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1002/dce.ui.html' by default
+EasyBarcodeScanner.scan(ui?: string|HTMLElement);
+```
+
+The ui can be a url or a `HTMLElement`.
+
+Please refer to [customize the ui for CameraEnhancer](https://www.dynamsoft.com/camera-enhancer/docs/web/programming/javascript/user-guide/index.html#customize-the-ui) for details.
+
+You can also clone this repository and modify `src/index.ts` to suit your needs.
