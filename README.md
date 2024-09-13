@@ -5,7 +5,7 @@ A wrapper for dynamsoft-barcode-reader-javascript. Easier to use.
 ```html
 <button id="btn-scan">scan</button>
 <script src="https://cdn.jsdelivr.net/npm/dynamsoft-barcode-reader-bundle@10.2.1000/dist/dbr.bundle.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1001/dist/easy-barcode-scanner.js" data-license=""></script>
+<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1002/dist/easy-barcode-scanner.js" data-license=""></script>
 <script>
   let pScanner, scanner;
   document.getElementById('btn-scan').addEventListener('click',async()=>{
@@ -20,7 +20,7 @@ A wrapper for dynamsoft-barcode-reader-javascript. Easier to use.
 ```html
 <button id="btn-scan">scan</button>
 <script src="https://cdn.jsdelivr.net/npm/dynamsoft-barcode-reader-bundle@10.2.1000/dist/dbr.bundle.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1001/dist/easy-barcode-scanner.js" data-license=""></script>
+<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1002/dist/easy-barcode-scanner.js" data-license=""></script>
 <script>
   document.getElementById('btn-scan').addEventListener('click',async()=>{
     let txt = await EasyBarcodeScanner.scan();

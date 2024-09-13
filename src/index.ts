@@ -169,11 +169,11 @@ class EasyBarcodeScanner{
 
   dispose(){
     this._cvRouter?.dispose();
-    let ui = this._view.getUIElement();
+    let ui = this._view?.getUIElement();
     this._cameraEnhancer?.dispose();
     if(this._bAddToBodyWhenOpen){
       this._bAddToBodyWhenOpen = false;
-      document.body.removeChild(ui);
+      ui && document.body.removeChild(ui);
     }
   }
 
@@ -181,7 +181,7 @@ class EasyBarcodeScanner{
   static scan(uiPath: string): Promise<string>;
   static scan(uiElement: HTMLElement): Promise<string>;
   static scan(ui?: string | HTMLElement): Promise<string>;
-  static async scan(ui: string | HTMLElement = 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1001/dce.ui.html'){
+  static async scan(ui: string | HTMLElement = 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1002/dce.ui.html'){
     return await new Promise(async(rs,rj)=>{
 
       //========================== init ============================

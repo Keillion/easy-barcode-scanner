@@ -6,6 +6,8 @@ import terser from "@rollup/plugin-terser";
 import pkg from "./package.json" assert { type: "json" };
 const version = pkg.version;
 
+const hasSourceMap = 'production' !== process.env.BUILD;
+
 const banner = `/*!
 * easy-barcode-scanner
 * @version ${version} (build ${(new Date()).toISOString()})
@@ -21,7 +23,7 @@ export default async (commandLineArgs)=>{
       input: "src/index.ts",
       plugins: [
         nodeResolve(),
-        typescript({ tsconfig: "./tsconfig.json" }),
+        typescript({ tsconfig: "./tsconfig.json", sourceMap: hasSourceMap }),
       ],
       external: [
         "dynamsoft-core",
@@ -38,7 +40,7 @@ export default async (commandLineArgs)=>{
           name: "EasyBarcodeScanner",
           exports: "default",
           banner: banner,
-          sourcemap: 'production' !== process.env.BUILD,
+          sourcemap: hasSourceMap,
           globals: {
             "dynamsoft-core": "Dynamsoft.Core",
             "dynamsoft-license": "Dynamsoft.License",
@@ -54,7 +56,7 @@ export default async (commandLineArgs)=>{
           format: "es",
           exports: "default",
           banner: banner,
-          sourcemap: 'production' !== process.env.BUILD,
+          sourcemap: hasSourceMap,
           plugins: [
             terser({ ecma: 6 }),
             {
