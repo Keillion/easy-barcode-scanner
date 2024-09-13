@@ -125,6 +125,8 @@ class EasyBarcodeScanner{
     DrawingStyleManager.updateDrawingStyle(3, value);
   }
 
+  getOriginalCanvas(){ return (this._cvRouter as any)._dsImage.toCanvas(); }
+
   async open(){
     if(!this._cameraEnhancer.isOpen()){
       let ui = this._view.getUIElement();
@@ -181,7 +183,7 @@ class EasyBarcodeScanner{
   static scan(uiPath: string): Promise<string>;
   static scan(uiElement: HTMLElement): Promise<string>;
   static scan(ui?: string | HTMLElement): Promise<string>;
-  static async scan(ui: string | HTMLElement = 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1002/dce.ui.html'){
+  static async scan(ui: string | HTMLElement = 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1003/dce.ui.html'){
     return await new Promise(async(rs,rj)=>{
 
       //========================== init ============================
