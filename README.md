@@ -14,15 +14,16 @@ The simplest way to use Easy Barcode Scanner requires only one line code to crea
 ```html
 <button id="btn-scan">scan</button>
 <script src="https://cdn.jsdelivr.net/npm/dynamsoft-barcode-reader-bundle@10.2.1000/dist/dbr.bundle.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1004/dist/easy-barcode-scanner.js" data-license=""></script>
+<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1006/dist/easy-barcode-scanner.js" data-license=""></script>
 <script>
   document.getElementById('btn-scan').addEventListener('click',async()=>{
     alert(await EasyBarcodeScanner.scan());
   });
 </script>
 ```
+[Run in github.io >>>](https://keillion.github.io/easy-barcode-scanner/index.html)
 
-![One-Click Scanning](./one-func-direct-scan.png)
+![Out-of-the-box Scanning](./out-off-box-scan.png)
 
 ## Create Your Own Scanner for Further Control
 
@@ -31,7 +32,7 @@ You can also create your own scanner instance to have more control over the enti
 ```html
 <button id="btn-scan">scan</button>
 <script src="https://cdn.jsdelivr.net/npm/dynamsoft-barcode-reader-bundle@10.2.1000/dist/dbr.bundle.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1004/dist/easy-barcode-scanner.js" data-license=""></script>
+<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1006/dist/easy-barcode-scanner.js" data-license=""></script>
 <script>
   let pScanner, scanner;
   document.getElementById('btn-scan').addEventListener('click',async()=>{
@@ -54,19 +55,13 @@ npm i dynamsoft-barcode-reader-bundle@10.2.1000 -E
 
 2. Copy the `src/index.ts` file from the library into your project. Rename it as needed, for example: `[your-path]/easy-barcode-reader.ts.`
 
-3. Import `dynamsoft.config.ts` into project entry point(like `main.ts`):
+**Example 1: Simple Out-of-the-box Scan**
+For a simpler implementation, this example shows how to scan with a single function:
 
 ```ts
 import EasyBarcodeScanner from '[your-path]/easy-barcode-reader';
 
 EasyBarcodeScanner.license = ""; // Add your license key here
-```
-
-**Example 1: Simple One-Click Scan**
-For a simpler implementation, this example shows how to scan with a single function:
-
-```ts
-import EasyBarcodeScanner from '[your-path]/easy-barcode-reader';
 
 async scan(){
     alert(await EasyBarcodeScanner.scan()); // Display scanned result
@@ -78,6 +73,8 @@ This example demonstrates how to create a scanner instance and handle barcode re
 
 ```ts
 import EasyBarcodeScanner from '[your-path]/easy-barcode-reader';
+
+EasyBarcodeScanner.license = ""; // Add your license key here
 
 let pScanner = null;
 let scanner = null;
@@ -97,13 +94,13 @@ beforeUnmount(){
 
 ## Customize the UI
 
-The built-in UIs are located in files like `dce.ui.html`. You can copy `dce.ui.html` into your project, modify it as needed, and pass its path to the `createInstance` or `scan` API to use the customized version.
+The built-in UIs are located in files like `xxx.ui.html`. You can copy `xxx.ui.html` into your project, modify it as needed, and pass its path to the `createInstance` or `scan` API to use the customized version.
 
 ```typescript
+// use 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1006/easy-barcode-scanner.ui.html' by default
+EasyBarcodeScanner.scan(ui?: string|HTMLElement);
 // use 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.3/dist/dce.ui.html' by default
 EasyBarcodeScanner.createInstance(ui?: string|HTMLElement);
-// use 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1004/dce.ui.html' by default
-EasyBarcodeScanner.scan(ui?: string|HTMLElement);
 ```
 
 Please refer to [customize the UI of CameraEnhancer](https://www.dynamsoft.com/camera-enhancer/docs/web/programming/javascript/user-guide/index.html#customize-the-ui) for more details.
@@ -123,5 +120,5 @@ The license used in this sample is an automatically requested trial license, onl
 The license can be directly configured within the script tag when including the script file.
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1004/dist/easy-barcode-scanner.js" data-license="[YOUR-LICENSE]"></script>
+<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1006/dist/easy-barcode-scanner.js" data-license="[YOUR-LICENSE]"></script>
 ```

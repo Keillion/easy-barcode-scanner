@@ -1,8 +1,27 @@
 {
   "name": "easy-barcode-scanner",
-  "version": "10.2.1004",
+  "version": "10.2.1006",
   "description": "A wrapper for dynamsoft-barcode-reader-javascript. Easier to use.",
-  "main": "index.js",
+  "main": "./dist/easy-barcode-scanner.js",
+  "module": "./dist/easy-barcode-scanner.esm.js",
+  "files": [
+    "/dist",
+    "/easy-barcode-scanner.ui.html",
+    "/LICENSE"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": {
+        "require": "./dist/types/index.d.cts",
+        "import": "./dist/types/index.d.ts"
+      },
+      "import": "./dist/easy-barcode-scanner.esm.js",
+      "require": "./dist/easy-barcode-scanner.js"
+    }
+  },
+  "types": "./dist/types/index.d.ts",
+  "type": "module",
   "scripts": {
     "build": "rollup -c",
     "build:production": "rollup -c --environment BUILD:production",

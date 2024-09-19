@@ -4,6 +4,7 @@ import { CaptureVisionRouter } from 'dynamsoft-capture-vision-router';
 import { CameraEnhancer, CameraView, Feedback, DrawingStyleManager, DrawingStyle } from 'dynamsoft-camera-enhancer';
 import { BarcodeResultItem } from 'dynamsoft-barcode-reader';
 import { MultiFrameResultCrossFilter } from 'dynamsoft-utility';
+import 'dynamsoft-barcode-reader';
 
 
 //The following code uses the jsDelivr CDN, feel free to change it to your own location of these files
@@ -21,7 +22,7 @@ if(typeof document != undefined){
   let cs = document?.currentScript;
   if(cs){
     let license = cs.getAttribute('data-license');
-    if(license){ LicenseManager.license = license; }
+    if(license && LicenseManager.license != license){ LicenseManager.license = license; }
   }
 }
 
@@ -29,7 +30,7 @@ class EasyBarcodeScanner{
   // static initLicense = LicenseManager.initLicense.bind(this) as typeof LicenseManager.initLicense;
 
   static get license(){ return LicenseManager.license; }
-  static set license(value: string){ LicenseManager.license = value; }
+  static set license(value: string){ if(LicenseManager.license != value){ LicenseManager.license = value; } }
 
   /**
    * Presets: "ReadSingleBarcode", "ReadBarcodes_SpeedFirst"
@@ -183,7 +184,7 @@ class EasyBarcodeScanner{
   static scan(uiPath: string): Promise<string>;
   static scan(uiElement: HTMLElement): Promise<string>;
   static scan(ui?: string | HTMLElement): Promise<string>;
-  static async scan(ui: string | HTMLElement = 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1004/dce.ui.html'){
+  static async scan(ui: string | HTMLElement = 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1006/easy-barcode-scanner.ui.html'){
     return await new Promise(async(rs,rj)=>{
 
       //========================== init ============================
