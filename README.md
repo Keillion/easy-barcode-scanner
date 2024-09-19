@@ -12,16 +12,14 @@ The Easy Barcode Scanner is a lightweight, user-friendly wrapper for the Dynamso
 The simplest way to use Easy Barcode Scanner requires only one line code to create a video decoding web application.
 
 ```html
-<button id="btn-scan">scan</button>
 <script src="https://cdn.jsdelivr.net/npm/dynamsoft-barcode-reader-bundle@10.2.1000/dist/dbr.bundle.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1007/dist/easy-barcode-scanner.js" data-license=""></script>
+<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1007/dist/easy-barcode-scanner.js"
+  data-license=""></script>
 <script>
-  document.getElementById('btn-scan').addEventListener('click',async()=>{
-    alert(await EasyBarcodeScanner.scan());
-  });
+  EasyBarcodeScanner.scan().then(txt=>alert(txt)).catch(ex=>alert(ex.message || ex));
 </script>
 ```
-[Run in github.io >>>](https://keillion.github.io/easy-barcode-scanner/index.html)
+[Source Code](https://github.com/Keillion/easy-barcode-scanner/blob/main/index.html) | [Run in github.io >>>](https://keillion.github.io/easy-barcode-scanner/index.html)
 
 ![Out-of-the-box Scanning](./out-off-box-scan.png)
 
@@ -30,15 +28,27 @@ The simplest way to use Easy Barcode Scanner requires only one line code to crea
 You can also create your own scanner instance to have more control over the entire workflow. For more details on the encapsulated functionality, refer to `src/index.ts`, and feel free to modify it based on your specific needs.
 
 ```html
+<div id="camera-view-container" style="height:90vh"></div>
 <button id="btn-scan">scan</button>
 <script src="https://cdn.jsdelivr.net/npm/dynamsoft-barcode-reader-bundle@10.2.1000/dist/dbr.bundle.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1007/dist/easy-barcode-scanner.js" data-license=""></script>
+<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1007/dist/easy-barcode-scanner.js"
+  data-license=""></script>
 <script>
   let pScanner, scanner;
-  document.getElementById('btn-scan').addEventListener('click',async()=>{
-    scanner = await (pScanner || (pScanner = EasyBarcodeScanner.createInstance()));
-    scanner.onUniqueRead = (txt) => { console.log(txt); };
-    await scanner.open();
+  document.getElementById('btn-scan').addEventListener('click', async()=>{
+    try{
+      scanner = await (pScanner || (pScanner = EasyBarcodeScanner.createInstance()));
+      // Optional. Insert the UI into the specified element, otherwise the UI will be inserted into `document.body`.
+      document.querySelector("#camera-view-container").append(scanner.getUIElement());
+      scanner.onUniqueRead = (txt) => { console.log(txt); };
+      await scanner.open();
+    }catch(ex){
+      // If camera doesn't exist or is occupied, the camera may fail to open.
+      // So it's better to use `try-catch`.
+      let errMsg = ex.message || ex;
+      console.error(errMsg);
+      alert(errMsg);
+    }
   });
 </script>
 ```
@@ -64,14 +74,20 @@ import EasyBarcodeScanner from '[your-path]/easy-barcode-reader';
 EasyBarcodeScanner.license = ""; // Add your license key here
 
 async scan(){
-    alert(await EasyBarcodeScanner.scan()); // Display scanned result
+  try{
+    alert(await EasyBarcodeScanner.scan());
+  }catch(ex){
+    let errMsg = ex.message || ex;
+    console.error(errMsg);
+    alert(errMsg);
+  }
 }
 ```
 
 **Example 2: Setting Up a Scanner**
 This example demonstrates how to create a scanner instance and handle barcode readings efficiently:
 
-```ts
+```tsx
 import EasyBarcodeScanner from '[your-path]/easy-barcode-reader';
 
 EasyBarcodeScanner.license = ""; // Add your license key here
@@ -80,13 +96,24 @@ let pScanner = null;
 let scanner = null;
 
 async mount(){
+  try{
     scanner = await (pScanner || (pScanner = EasyBarcodeScanner.createInstance()));
+    cameraViewContainer.append(scanner.getUIElement()); // Optional.
     scanner.onUniqueRead = (txt) => { console.log(txt); };
     await scanner.open();
+  }catch(ex){
+    let errMsg = ex.message || ex;
+    console.error(errMsg);
+    alert(errMsg);
+  }
 }
 beforeUnmount(){
-    (await pScanner)?.dispose();  // Clean up to free resources
+  // Clean up to free resources
+  try{ (await pScanner)?.dispose(); }catch(_){}
 }
+
+// usage example in a tsx/jsx component
+<div ref={cameraViewContainer}></div>
 ```
 
 * The `mount()` function initializes the scanner and listens for barcode readings.
