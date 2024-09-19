@@ -4,7 +4,7 @@ A lightweight wrapper for Dynamsoft Barcode Reader JavaScript library, designed 
 
 ## Out-of-the-box Scanning
 
-The simplest way to use Easy Barcode Scanner requires just three lines of code to create a video decoding web application.
+The simplest way to use Easy Barcode Scanner requires only one line code to create a video decoding web application.
 
 ```html
 <button id="btn-scan">scan</button>
@@ -12,8 +12,7 @@ The simplest way to use Easy Barcode Scanner requires just three lines of code t
 <script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1004/dist/easy-barcode-scanner.js" data-license=""></script>
 <script>
   document.getElementById('btn-scan').addEventListener('click',async()=>{
-    let txt = await EasyBarcodeScanner.scan();
-    alert(txt);
+    alert(await EasyBarcodeScanner.scan());
   });
 </script>
 ```
