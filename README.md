@@ -19,7 +19,7 @@ The simplest way to use Easy Barcode Scanner requires only one line code to crea
   EasyBarcodeScanner.scan().then(txt=>alert(txt)).catch(ex=>alert(ex.message || ex));
 </script>
 ```
-[Source Code](https://github.com/Keillion/easy-barcode-scanner/blob/main/index.html) | [Run in github.io >>>](https://keillion.github.io/easy-barcode-scanner/index.html)
+[Source Code >>](https://github.com/Keillion/easy-barcode-scanner/blob/main/index.html) | [Run in github.io >>](https://keillion.github.io/easy-barcode-scanner/index.html)
 
 ![Out-of-the-box Scanning](./out-off-box-scan.png)
 
@@ -38,7 +38,8 @@ You can also create your own scanner instance to have more control over the enti
   document.getElementById('btn-scan').addEventListener('click', async()=>{
     try{
       scanner = await (pScanner || (pScanner = EasyBarcodeScanner.createInstance()));
-      // Optional. Insert the UI into the specified element, otherwise the UI will be inserted into `document.body`.
+      // Optional. Insert the UI into the specified element.
+      // Otherwise the UI will be inserted into `document.body`.
       document.querySelector("#camera-view-container").append(scanner.getUIElement());
       scanner.onUniqueRead = (txt) => { console.log(txt); };
       await scanner.open();
@@ -124,9 +125,9 @@ beforeUnmount(){
 The built-in UIs are located in files like `xxx.ui.html`. You can copy `xxx.ui.html` into your project, modify it as needed, and pass its path to the `createInstance` or `scan` API to use the customized version.
 
 ```typescript
-// use 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1007/easy-barcode-scanner.ui.html' by default
+// 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1007/easy-barcode-scanner.ui.html' by default
 EasyBarcodeScanner.scan(ui?: string|HTMLElement);
-// use 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.3/dist/dce.ui.html' by default
+// 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.3/dist/dce.ui.html' by default
 EasyBarcodeScanner.createInstance(ui?: string|HTMLElement);
 ```
 
@@ -147,5 +148,6 @@ The license used in this sample is an automatically requested trial license, onl
 The license can be directly configured within the script tag when including the script file.
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1007/dist/easy-barcode-scanner.js" data-license="[YOUR-LICENSE]"></script>
+<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1007/dist/easy-barcode-scanner.js"
+data-license="[YOUR-LICENSE]"></script>
 ```
