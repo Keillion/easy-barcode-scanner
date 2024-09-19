@@ -1,5 +1,7 @@
 # Easy Barcode Scanner
 
+> Project moved to https://github.com/Dynamsoft/easy-barcode-scanner
+
 The Easy Barcode Scanner is a lightweight, user-friendly wrapper for the Dynamsoft Barcode Reader SDK. It simplifies the barcode scanning process, making it easier to integrate into your web applications with minimal effort.
 
 **Features**
