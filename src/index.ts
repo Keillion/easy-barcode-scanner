@@ -84,7 +84,7 @@ class EasyBarcodeScanner{
       cvRouter.addResultFilter(filter);
 
       cvRouter.addResultReceiver({
-        onDecodedBarcodesReceived: (results)=>{
+        onCapturedResultReceived: (results)=>{
           let items = results.barcodeResultItems;
 
           try{scanner.onFrameRead && scanner.onFrameRead(items)}catch(_){}
@@ -184,7 +184,7 @@ class EasyBarcodeScanner{
   static scan(uiPath: string): Promise<string>;
   static scan(uiElement: HTMLElement): Promise<string>;
   static scan(ui?: string | HTMLElement): Promise<string>;
-  static async scan(ui: string | HTMLElement = 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1006/easy-barcode-scanner.ui.html'){
+  static async scan(ui: string | HTMLElement = 'https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1007/easy-barcode-scanner.ui.html'){
     return await new Promise(async(rs,rj)=>{
 
       //========================== init ============================
@@ -193,13 +193,16 @@ class EasyBarcodeScanner{
 
       //========================== receive result ============================
       let pVideoScan = new Promise<BarcodeResultItem[]>(rs=>{
-        let iRound = 0;
+        // let iRound = 0;
         scanner.onFrameRead = barcodeResults=>{
-          if(barcodeResults.length){
-            ++iRound;
-            if(2 == iRound || 'disabled' !== scanner._cameraEnhancer.singleFrameMode){
-              rs(barcodeResults);
-            }
+          if('disabled' !== scanner._cameraEnhancer.singleFrameMode){
+            rs(barcodeResults);
+          }else if(barcodeResults.length){
+            //// 1D barcode need 2 frame to comfirm
+            //// so if you need choose between 1D and QR in one frame, you need `iRound`
+            // if(2 == ++iRound){ rs(barcodeResults); }
+            //// we don't use `iRound` for faster result
+            rs(barcodeResults);
           }
         };
       });
@@ -242,6 +245,11 @@ class EasyBarcodeScanner{
 
       let barcodeResults = await pVideoScan;
       //========================== success get result ============================
+
+      if(0 === barcodeResults.length){
+        rs(null);
+        return;
+      }
 
       if(1 === barcodeResults.length){
         scanner.dispose();
