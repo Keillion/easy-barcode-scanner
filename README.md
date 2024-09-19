@@ -1,6 +1,11 @@
 # Easy Barcode Scanner
 
-A lightweight wrapper for Dynamsoft Barcode Reader JavaScript library, designed for simplified usage.
+The Easy Barcode Scanner is a lightweight, user-friendly wrapper for the Dynamsoft Barcode Reader SDK. It simplifies the barcode scanning process, making it easier to integrate into your web applications with minimal effort.
+
+**Features**
+* Supports video-based barcode scanning
+* Handles multiple barcodes with ease
+* Simple integration with just a few lines of code
 
 ## Out-of-the-box Scanning
 
@@ -111,6 +116,12 @@ You can use the code snippet from the[Out-of-the-box Scanning](#out-of-the-box-s
 
 > Please note that some barcode types are not supported by default for performance concern. Please check [here](https://www.dynamsoft.com/barcode-reader/docs/web/programming/javascript/user-guide/index.html#customize-the-process) to change settings.
 
-## Request a license
+## License Information
 
 The license used in this sample is an automatically requested trial license, only valid for 24 hours and applicable to any newly authorized browser. To test the SDK further, you can request a 30-day free trial license via the <a href="https://www.dynamsoft.com/customer/license/trialLicense?ver=10.2.10&utm_source=sampleReadme&product=dbr&package=js" target="_blank">Request a Trial License</a> link.
+
+The license can be directly configured within the script tag when including the script file.
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/Keillion/easy-barcode-scanner@10.2.1004/dist/easy-barcode-scanner.js" data-license="[YOUR-LICENSE]"></script>
+```
